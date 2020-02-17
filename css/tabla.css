@@ -1,0 +1,56 @@
+.capa_tabla{
+	width: 103%; /* 63%; */
+    margin-left: 35px;   /* 355px; */
+}
+
+.capa_tabla table{
+	width: 80% ;
+	margin: 0 auto;
+	border-collapse: collapse;
+	/*  border: 1px dotted #CCC;  */
+	scroll-behavior: auto;
+    font-size: 14px;
+    color: darkred;
+}
+.capa_tabla  .cabecera{
+	text-align:left;
+	font-weight: bold;
+	border:0px;
+	border-bottom: 5px solid rgb(124, 25, 25);
+    /*background-color: lightgrey; */
+    padding:5px;
+	font-size: 15px;
+	color:darkred;
+}
+
+.capa_tabla  .ultima_par{
+	background-color: rgb(255, 255, 255);
+	color:darkred;
+	border:0px;
+	padding: 5px 10px;
+	border-bottom: 5px solid rgb(124, 25, 25);
+}
+
+.capa_tabla  .ultima_impar{
+	background-color:rgb(250, 231, 206);
+    color:darkred;  
+	border:0px;
+	padding: 5px 10px;
+	border-bottom: 5px solid rgb(124, 25, 25);
+}
+
+.capa_tabla  .pares{
+	background-color: rgb(255, 255, 255);
+	color:darkred;
+	border:0px;
+	border-bottom: 0px dotted black;
+	padding: 5px 10px;
+}
+.capa_tabla  .impares{
+	/* background-color:rgb(223, 184, 134); */
+	background-color:rgb(250, 231, 206);
+    color:darkred;  
+	border:0px;
+	border-bottom: 0px dotted black;
+	padding: 5px 10px;
+}

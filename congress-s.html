@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+	    <meta charset="utf-8">
+	    <title>TGIF Congress - Senate data</title>
+
+	    <!-- aquí aplicarem el Favicon -->
+        <link rel="shortcut icon" href="./img/favicon.ico">
+
+    	<!-- aquí aplicarem els estils -->
+		<link rel="stylesheet" href="./css/styles.css">  
+		<link rel="stylesheet" href="./css/tabla.css">
+		
+	   	<!-- BOOTSTRAP -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">  
+		
+	    <!-- aquí aplicarem les fonts de Google -->
+	   	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:100,300,400">  
+
+  	</head>
+<!-- =================== B O D Y ========================================= -->
+  	<body>
+  		<!-- CABECERA superior de la web ========== -->
+    	<header class="primary-header container group">
+    		<div id="logo-img">    			
+    		</div>
+			<h1 class="logo">
+		        <a href="index.html">Transparent<br> Government</a>
+		    </h1>
+
+		    <h3 class="tagline"><img id="img-email" src="./img/carta_sobre_blanco.png" alt="email" />
+		    					<a id="email" href="mailto:info@tgif.net">info@tgif.net</a>
+		    </h3>
+
+			<nav class="nav primary-nav">
+		    	<!-- MENU DE BOOTSTRAP ================== -->
+		        <ul class="nav nav-pills ml-auto">
+              		<li class="nav-item">
+          				<a class="nav-link" href="./index.html">&nbsp;&nbsp;&nbsp;Welcome&nbsp;&nbsp;&nbsp;</a> 
+              		</li>
+
+					<li class="nav-item dropdown" > 
+						<a  id="BotonDesplegable1" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Congress 113</a>
+						<div class="dropdown-menu">		                
+						  <a id="subBoton11" class="dropdown-item" href="./congress-s.html">Senate</a>
+						  <!-- <div class="dropdown-divider"></div>  -->   <!-- linea separadora, no hace falta pero como practica la pongo --> 
+						  <a id="subBoton12" class="dropdown-item" href="./congress-h.html">House</a>
+					  </div>
+					</li>
+				  
+				<li id="nav-lista2" class="nav-item dropdown" > 
+					<a  id="BotonDesplegable2" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Attendance</a>
+					<div class="dropdown-menu">		                
+					  <a id="subBoton21" class="dropdown-item" href="./attendance-s.html">Senate</a>
+					  <!-- <div class="dropdown-divider"></div>  -->   <!-- linea separadora, no hace falta pero como practica la pongo --> 
+					  <a id="subBoton22" class="dropdown-item" href="./attendance-h.html">House</a>
+				    </div>
+				</li>
+				
+				<li id="nav-lista3" class="nav-item dropdown" > 
+					<a  id="BotonDesplegable3" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Party Loyalty</a>
+					<div class="dropdown-menu">		                
+					  <a id="subBoton31" class="dropdown-item" href="./party-s.html">Senate</a>
+					  <!-- <div class="dropdown-divider"></div>  -->   <!-- linea separadora, no hace falta pero como practica la pongo --> 
+					  <a id="subBoton32" class="dropdown-item" href="./party-h.html">House</a>
+				    </div>
+				</li>
+
+				</ul>
+			    <!-- FIN MENU BOOTSTRAP =================== -->
+		    </nav>
+		    <div>
+		    	<br>
+		    	<br>		    	
+		    </div>
+		    <div id="hora">
+		    	<p> 23:55 a.m. </p>  <!-- para poner una linea con la HORA y las ultimas NEWS -->
+		    	
+		    </div> 
+		    <div id="lastNews">
+		    	<!-- <p> <span>LAST NEWS: &nbsp;</span>the Democrat party has been....  </p> -->
+		    </div>
+	  	</header>
+
+	  	<!-- PRINCIPAL ========== -->
+	  	<main>
+	  		<!-- parte central horizontal de la página con fondo blanco o tapiz claro -->
+			<section class="row">
+				<!-- <div class="grid">  -->
+
+
+
+				<div class="row_text">
+					<h5>S E N A T O R S</h5>
+					<p>
+						First convened in 1789, the composition and powers of the Senate are established in Article One of the U.S. Constitution. Each state is represented by two senators, regardless of population, who serve staggered six-year terms. The Senate has several exclusive powers not granted to the House, including consenting to treaties as a precondition to their ratification and consenting to or confirming appointments of Cabinet secretaries, federal judges, other federal executive officials, military officers, regulatory officials, ambassadors, and other federal uniformed officers, as well as trial of federal officials impeached by the House.
+					</p>
+				</div>
+				
+				<!-- BARRA DE FILTROS ==================== -->
+				<div id="barra-filtros" class="barra-filtros-posicion">
+					<!-- <legend> &nbsp; Mark which info want to show &nbsp;</legend>  -->
+          			
+          			<div id="dropdown">
+			            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Filter by State:&nbsp;</span>			            
+			            <!-- <select name="state" id="stateSelect" size="5" multiple> -->
+			            <select name="state" id="stateSelect">
+			                <!-- <option value="all">All States</option> -->
+			                <!-- <option value="AL">Alabama</option> -->
+			                <!-- <option value="AK">Alaska</option> -->
+			            	<!-- <option value="AZ">Arizona</option> -->
+	                  		<!-- <option value="WI">.........</option> -->
+	              		</select>
+	          		</div>
+
+	          		<div id="txtNames">
+	          			&nbsp;Filter by name: &nbsp;								
+						<input type="text" id="txt-nombre-senate" class="filtrosNombre" value="">&nbsp;
+	          		</div>
+
+          			<div id="chkFiltros">
+              			&nbsp;Filter by party: &nbsp;								
+						<input type="checkbox" id="chk_MostrarRep" value="R" checked>Republicans&nbsp;
+						<input type="checkbox" id="chk_MostrarDem" value="D" checked>Democrates&nbsp;
+						<input type="checkbox" id="chk_MostrarInd" value="I" checked>Independents&nbsp;          						
+					</div>
+
+					<div>
+						<img id="btn-lupa-senate" class="lupa-css" src="./img/lupa-peru-btn.jpg">
+						<span id="btnRefreshCongSenate">Load filters...&nbsp;</span>
+					</div>
+
+					
+	          	</div>
+
+				<!-- div para situar TABLA resultados ===== -->
+				<div id="tabla-congr-senate" class="capa_tabla">
+			        <!-- S E N A T E -->			        
+			          <!-- <h5 id="senate_h5">S E N A T E  -  T A B L E </h5>  -->
+			        
+			          <!-- AQUI VA SITUADA LA TABLA GENERADA EN EL JAVASCRIPT DE senate.js -->			        
+				</div>
+
+				<!-- animacion de Loading mientras espera que se carguen los datos en la tabla -->
+				<!-- <div class="col-1-3"> </div> -->
+				<div id="loadingSenate" class="loading col-12">
+					<img src="./img/loadinglupa417px.gif" alt="loadingSenate">
+				</div>
+				
+				<!-- <progress value="0" max="100" id="barra" class="barraStyle"> </progress> -->
+				<!-- <div class="col-1-3"> </div> -->
+			</section>
+	  		
+	  	</main>
+
+	  	<!-- bola de boton scroll para volver al inicio -->
+		<a href="#" id="scroll"><span></span></a>
+		
+  		<!-- PIE inferior de página ========== -->
+	  	<footer class="primary-footer group">			  		  
+		    <small> T.G.I.F. &copy; 2020 &mdash; Transparent Government In&ndash;Fact &mdash; Chicago, IL</small>	
+	  	</footer>
+
+  		<!-- zona llamada a los scripts, buena practica cargarlos al final, primero los bootstrap y jquery y luego los nuestros pq se leen después y prevalece ultimo valor propiedades -->
+
+	    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	  	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	  	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+			  
+        <!-- zona llamada a los scripts, de tema llamada API para descargar fichero JSON y funciones crear tablas <td> -->
+		<!-- <script type="text/javascript" src="./js/propublica113.js"></script> -->
+		<!-- <script type="text/javascript" src="./js/senate_113.js"></script> -->
+
+		<script type="text/javascript" src="./js/congress.js"></script>
+		<!-- <script type="text/javascript" src="./js/senate.js"></script> -->
+
+		<!-- funciones particulares de esta practica Sprint -->
+		<script type="text/javascript" src="./js/navbar.js"></script>
+				
+	</body>
+</html>

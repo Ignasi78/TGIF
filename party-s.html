@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+	    <meta charset="utf-8">
+	    <title>TGIF Senate Party Loyalty </title>
+
+	    <!-- aquí aplicarem el Favicon -->
+      <link rel="shortcut icon" href="./img/favicon.ico">
+
+    	<!-- aquí aplicarem els estils -->
+    	<link rel="stylesheet" href="./css/styles.css">
+      <link rel="stylesheet" href="./css/tabla.css">     
+
+        <!-- BOOTSTRAP -->
+	   	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">  
+ 
+	    <!-- aquí aplicarem les fonts de Google -->
+	   	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:100,300,400">  
+
+
+  	</head>
+<!-- =================== B O D Y ========================================= -->
+  	<body>
+      <!-- CABECERA superior de la web ========== -->
+      <header class="primary-header container group">
+        <div id="logo-img"></div>
+      <h1 class="logo">       
+            <p>Transparent<br>Government</p>
+        </h1>
+
+        <h3 class="tagline"><img id="img-email" src="./img/carta_sobre_blanco.png" alt="email" />
+                  <a id="email" href="mailto:info@tgif.net">info@tgif.net</a>
+        </h3>
+
+        <nav class="nav primary-nav">
+          <!-- MENU DE BOOTSTRAP ================== -->
+            <ul class="nav nav-pills ml-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="./index.html">&nbsp;&nbsp;&nbsp;Welcome&nbsp;&nbsp;&nbsp;</a> 
+                  </li>
+            
+          <li id="nav-lista1" class="nav-item dropdown" > 
+                    <a  id="BotonDesplegable1" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Congress 113</a>
+                    <div class="dropdown-menu">                   
+                  <a id="subBoton11" class="dropdown-item" href="./congress-s.html">Senate</a>
+                  <!-- <div class="dropdown-divider"></div>  -->   <!-- linea separadora, no hace falta pero como practica la pongo --> 
+                  <a id="subBoton12" class="dropdown-item" href="./congress-h.html">House</a>
+                    </div>
+                  </li>
+          
+          <li id="nav-lista2" class="nav-item dropdown" > 
+            <a  id="BotonDesplegable2" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Attendance</a>
+            <div class="dropdown-menu">                   
+              <a id="subBoton21" class="dropdown-item" href="./attendance-s.html">Senate</a>
+              <!-- <div class="dropdown-divider"></div>  -->   <!-- linea separadora, no hace falta pero como practica la pongo --> 
+              <a id="subBoton22" class="dropdown-item" href="./attendance-h.html">House</a>
+              </div>
+          </li>
+          
+          <li id="nav-lista3" class="nav-item dropdown" > 
+            <a  id="BotonDesplegable3" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Party Loyalty</a>
+            <div class="dropdown-menu">                   
+              <a id="subBoton31" class="dropdown-item" href="./party-s.html">Senate</a>
+              <!-- <div class="dropdown-divider"></div>  -->   <!-- linea separadora, no hace falta pero como practica la pongo --> 
+              <a id="subBoton32" class="dropdown-item" href="./party-h.html">House</a>
+              </div>
+          </li>
+
+          </ul>
+          <!-- FIN MENU BOOTSTRAP =================== -->
+        </nav>
+
+      </header>
+
+      <!-- PRINCIPAL ========== -->
+      <main>
+
+      <!-- LOS 2 CUADRANTES SUPERIORES BAJO UN MISMO SECTION class ROW -->
+      <div class="row">
+
+          <div id="cuadrante-11" class="col-sm-5">
+              <h5>P A R T Y  &nbsp;  L O Y A L T Y</h5>            
+
+              <p>The Senate uses roll-call votes; a clerk calls out the names of all the senators, each senator stating "aye" or "no" when his or her name is announced. The House reserves roll-call votes for the most formal matters, as a roll-call of all 435 representatives takes quite some time; normally, members vote by electronic device. In the case of a tie, the motion in question fails. In the Senate, the Vice President may (if present) cast the tiebreaking vote.</p>
+          </div>
+
+          <div id="cuadrante-12" class="col-sm-5 capa_tabla">
+              <h5>Senate at a glance</h5>
+              <table>
+                  <thead>
+                      <tr class="Cabeceras">
+                          <th>Party</th>
+                          <th>Number of Reps</th>
+                          <th>% Voted with Prty</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr id=id-Repub>
+                          <td>Republican</td>
+                      </tr>
+                      <tr id=id-Democ>
+                          <td>Democrat</td>
+                      </tr>
+                      <tr id=id-Indep>
+                          <td>Independent</td>
+                      </tr>
+                      <tr id="id-total">
+                          <td>Total</td>
+                      </tr>                      
+                  </tbody>
+              </table>
+
+          </div>
+		  
+			<!-- animacion de Loading mientras espera que se carguen los datos en la tabla -->
+			<!-- <div class="col-4"> </div> -->
+			<div id="loadingSenatePar" class="loading col-12">
+				<img src="./img/piechart271px.gif" alt="loadingSenatePar">
+			</div>
+			
+            <!-- estos 2 SECTIONs de hasta aquí, deberían conformar los dos cuadrantes superiores. -->
+          </div>
+
+          <div class="row">
+                 <!-- y los 2 SECTIONs de continuación, deberían conformar los dos cuadrantes inferiores -->
+            <div id="cuadrante-21" class="col-sm-5 capa_tabla">
+              
+              <h5>Least Engaged (Bottom 10% Attendance)</h5>
+              <table>
+                  <thead>
+                      <tr class="Cabeceras">
+                          <th>Name</th>
+                          <th>Number of Missed Votes</th>
+                          <th>% Missed</th>
+                      </tr>
+                  </thead>
+                  <tbody id="leastTable">
+ 
+ 
+                  </tbody>
+              </table>
+
+          </div>   <!-- final tabla Least Engaged  -->
+
+          <div id="cuadrante-22" class="col-sm-5 capa_tabla">
+              <h5>Most Engaged (Top 10% Attendance)</h5>
+              <table>
+                  <thead>
+                      <tr class="Cabeceras">
+                          <th>Name</th>
+                          <th>Number of Missed Votes</th>
+                          <th>% Missed</th>
+                      </tr>
+                  </thead>
+                  <tbody id="mostTable">
+
+
+                  </tbody>
+              </table>
+
+          </div>  <!-- tabla Most Engaged -->
+
+      </div>   <!-- section segundo ROW correspondiente a los 2 cuadrantes inferiores -->
+
+      </main>
+
+      <!-- bola de boton scroll para volver al inicio -->
+      <a href="#" id="scroll"><span></span></a>
+
+      <!-- PIE inferior de página ========== -->
+      <footer class="primary-footer group">      
+          <small> T.G.I.F. &copy; 2020 &mdash; Transparent Government In&ndash;Fact &mdash; Chicago, IL</small>
+      </footer>
+
+      <!-- zona llamada a los scripts, buena practica cargarlos al final, primero los bootstrap y jquery y luego los nuestros pq se leen después y prevalece ultimo valor propiedades -->
+
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        
+      <!-- zona llamada a los scripts, de tema llamada API para descargar fichero JSON y funciones crear tablas <td> -->
+      <!-- <script type="text/javascript" src="./js/propublica113.js"></script> -->
+      <!-- <script type="text/javascript" src="./js/senate_113.js"></script> -->
+
+      <script type="text/javascript" src="./js/data-analyst.js"></script>  
+      <!-- <script type="text/javascript" src="./js/senate.js"></script>   -->
+
+      <!-- funciones particulares de la barra navegacion menu -->
+      <script type="text/javascript" src="./js/navbar.js"></script>
+
+    </body>
+</html>
