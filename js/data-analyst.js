@@ -1,8 +1,5 @@
 'use strict'
 
-//alert("attendance-s JavaScript");
-// var link = "<a href='" + member.url + "'>" + member.first_name + " " + member.last_name + "</a>";
-
 var data;
 
 onload = (function () {
@@ -44,8 +41,8 @@ onload = (function () {
        });
 })
 
+// oculta el GIF animado de espera mientras se cargan los datos de la API, una vez ya se hayan cargado.
 function ocultaCargando(){
-    // debugger;
     var pagina = document.title;
     switch (pagina){
         case "TGIF Senate Attendance":
@@ -71,12 +68,10 @@ function ocultaCargando(){
 }
 
 function rellenaPagina (){
-
     // var data = data_senate;   ... ahora ya no, ahora var 'data' contiene resultado del FETCH
-
     // creamos un objeto tipo JSON (a medida, solo valores que queremos (evitamos Array-Matriz temporal))
     // usamos LET en vez de VAR para reutilizar mismas variables para 4 paginas
-    let statistics = {
+    let analisis = {
         "numberR": 0,
         "numberD": 0,
         "numberI": 0,
@@ -93,97 +88,114 @@ function rellenaPagina (){
     }
     
     let members = data.results[0].members;
-    
-    // var repA = [];
-    // var demA = [];
-    // var indA = [];
 
-    // === LLAMADAS A FUNCIONES (aunque seguimos dentro la funcion rellenaPagina) =====
+    // === LLAMADAS A FUNCIONES (aunque seguimos dentro la funcion rellenaPagina) ===========================
 
     // calcula la Tabla Glance, la del cuadrante 1-2:
     acumuladorSegunPartido();  // suma X candidatos Democratas, Y Republicanos, Z indepes
-    average_VotedWithParty();  // calcula la media AVG del campo "% votos" de cada partido
-    // glanceTable();  ya no hace falta una funcion pq ya queda llenada la tabla
-
-    // calcula 2 Tablas Engaged segun pasemos "least" (orden menos a mas) o "most" (inverso)
+    mediaVotosPorPartido();  // calcula la media AVG del campo "% votos" de cada partido
+    // calcula 2 Tablas Engaged, de cuadrantes 2-1 y 2-2 del HTML, segun le pasemos "least" (orden menos a mas) o "most" (inverso)
     engagedAtt("least");
     engagedAtt("most");
-    
     // calcula 2 Tablas lessTen
-    engagedParLessTen();  // lessTenPctLoy();
-    engagedParMostTen();  // mostTenPctLoy();
+    engagedParLessTen();  
+    engagedParMostTen();  
+    escribeHtml();
 
-    //lessTen();
-    //
-    //mostTen();
-    console.log(statistics);
-    putElements();
-    buildSmallTable(statistics.doVote, document.getElementById("mostLoyTable"));
-    buildSmallTable(statistics.doNotVote, document.getElementById("leastLoyTable"));
+    if (document.title.includes('Senate')) {
+        if (document.title.includes('Party')) {
+            var tablaLeast = document.getElementById('leastTablePartySen');
+            var tablaMost  = document.getElementById('mostTablePartySen');
+        }else{
+            var tablaLeast = document.getElementById('leastTableAttSen');
+            var tablaMost  = document.getElementById('mostTableAttSen');
+        }
+    }else{
+        if (document.title.includes('Party')) {
+            var tablaLeast = document.getElementById('leastTablePartyHou');
+            var tablaMost  = document.getElementById('mostTablePartyHou');
+        }else{
+            var tablaLeast = document.getElementById('leastTableAttHou');
+            var tablaMost  = document.getElementById('mostTableAttHou');
+        }
+    }
 
-    // === DECLARACION DE FUNCIONES (aunque seguimos dentro la funcion rellenaPagina) =====
+    cargarTablaAnalisis(analisis.doVote, document.getElementById(tablaMost));
+    cargarTablaAnalisis(analisis.doNotVote, document.getElementById(tablaLeast));
+
+    //cargarTablaAnalisis(analisis.doVote, document.getElementById("mostLoyTable"));
+    //cargarTablaAnalisis(analisis.doNotVote, document.getElementById("leastLoyTable"));
+
+    // === DECLARACION DE FUNCIONES (aunque seguimos dentro la funcion rellenaPagina) =======================
 
     function acumuladorSegunPartido() {
-        for (var i = 0; i < members.length; i++) {
+        for (var puntero = 0; puntero < members.length; puntero++) {
 
-            let everyMember = data.results[0].members[i];
+            let everyMember = data.results[0].members[puntero];
 
             switch (everyMember.party) {
                 case "R":
-                    statistics.numberR++;
+                    analisis.numberR++;
                     break;
                 case "D":
-                    statistics.numberD++;
+                    analisis.numberD++;
                     break;
                 case "I":
-                    statistics.numberI++;
+                    analisis.numberI++;
                     break;
             }
         }
     }
 
-    function putElements() {
-
+    function escribeHtml() {
         var titles = document.getElementsByClassName('cabeceras');
-        titles.className="capa_tabla cabecera";
-
         var repRow = document.getElementById('id-Repub');
-        repRow.insertCell().innerHTML = statistics.numberR;
-        repRow.insertCell().innerHTML = statistics.republicanPartyPercentage;
-        repRow.className="pares";
-        
         var demRow = document.getElementById('id-Democ');
-        demRow.insertCell().innerHTML = statistics.numberD;
-        demRow.insertCell().innerHTML = statistics.democratsPartyPercentage;
-        demRow.className="impares";
-
         var indRow = document.getElementById('id-Indep');
-        indRow.insertCell().innerHTML = statistics.numberI;
-        indRow.insertCell().innerHTML = statistics.independentPartyPercentage;
-        indRow.className="pares";
-
         var total = document.getElementById('id-total');
-        total.insertCell().innerHTML = statistics.numberD + statistics.numberR + statistics.numberI;
-        total.insertCell().innerHTML = statistics.totalPartyPercentage;
+
+        if (document.title.includes('Senate')) {
+            if (document.title.includes('Party')) {
+                var tablaLeast = document.getElementById('leastTablePartySen');
+                var tablaMost  = document.getElementById('mostTablePartySen');
+            }else{
+                var tablaLeast = document.getElementById('leastTableAttSen');
+                var tablaMost  = document.getElementById('mostTableAttSen');
+            }
+        }else{
+            if (document.title.includes('Party')) {
+                var tablaLeast = document.getElementById('leastTablePartyHou');
+                var tablaMost  = document.getElementById('mostTablePartyHou');
+            }else{
+                var tablaLeast = document.getElementById('leastTableAttHou');
+                var tablaMost  = document.getElementById('mostTableAttHou');
+            }
+        }
+        titles.className="capa_tabla cabecera";
+        repRow.insertCell().innerHTML = analisis.numberR;
+        repRow.insertCell().innerHTML = analisis.republicanPartyPercentage;
+        repRow.className="pares";        
+        demRow.insertCell().innerHTML = analisis.numberD;
+        demRow.insertCell().innerHTML = analisis.democratsPartyPercentage;
+        demRow.className="impares";
+        indRow.insertCell().innerHTML = analisis.numberI;
+        indRow.insertCell().innerHTML = analisis.independentPartyPercentage;
+        indRow.className="pares";
+        total.insertCell().innerHTML = analisis.numberD + analisis.numberR + analisis.numberI;
+        total.insertCell().innerHTML = analisis.totalPartyPercentage;
         total.className="impares";
         total.className="ultima_impar";
         
-        var leastTable = document.getElementById('leastTable');
-        buildSmallTable(statistics.leastEngaged, leastTable);
-        
-        var mostTable = document.getElementById('mostTable');
-        buildSmallTable(statistics.mostEngaged, mostTable);
+        cargarTablaAnalisis(analisis.leastEngaged, tablaLeast);        
+        cargarTablaAnalisis(analisis.mostEngaged, tablaMost);
     }
 
-    function average_VotedWithParty() {
+    function mediaVotosPorPartido() {
         var arrayWithDem = [];
         var arrayWithRep = [];
         var arrayWithInd = [];
-
-        for (var j = 0; j < members.length; j++) {
-
-            let everyMember = data.results[0].members[j];
-
+        for (var punteroA = 0; punteroA < members.length; punteroA++) {
+            let everyMember = data.results[0].members[punteroA];
             if (everyMember.party == "D") {
                 arrayWithDem.push(everyMember);
             }
@@ -193,112 +205,101 @@ function rellenaPagina (){
             if (everyMember.party == "I") {
                 arrayWithInd.push(everyMember);
             }
-
-            statistics.democratsPartyPercentage = giveMeAvg(arrayWithDem).toFixed(2);
-            statistics.republicanPartyPercentage = giveMeAvg(arrayWithRep).toFixed(2);
-            statistics.independentPartyPercentage = giveMeAvg(arrayWithInd).toFixed(2);       statistics.totalPartyPercentage = giveMeAvg(members).toFixed(2);
+            analisis.democratsPartyPercentage = calculaMedia(arrayWithDem).toFixed(2);
+            analisis.republicanPartyPercentage = calculaMedia(arrayWithRep).toFixed(2);
+            analisis.independentPartyPercentage = calculaMedia(arrayWithInd).toFixed(2);       
+            analisis.totalPartyPercentage = calculaMedia(members).toFixed(2);
         }
     }
 
-    function giveMeAvg(recievedArray) {
-
-        var sum = 0;
-        for (var k = 0; k < recievedArray.length; k++) {
-            sum = sum + recievedArray[k].votes_with_party_pct;
+    function calculaMedia(arrTemporal) {
+        var acumula = 0;
+        for (var puntero = 0; puntero < arrTemporal.length; puntero++) {
+            acumula = acumula + arrTemporal[puntero].votes_with_party_pct;
         }
-
-        var avg = sum / recievedArray.length
-        return avg;
+        var media = acumula;
+        acumula = acumula / arrTemporal.length;
+        return media;
     }
 
-    //LESS ENGAGED ATENDANCE" TABLE
-    function engagedAtt(direction) {
-        
-        if(direction == "least"){ 
-            var sortedArray = members.sort(function (a, b) {
+    // funcion para sacar los Menos Seguidos (tabla Less) o Mas Seguidos (tabla Most) segun sea Ascendente o Descendente
+    function engagedAtt(LeastOrMost) {        
+        if(LeastOrMost == "least"){ 
+            var arrMiembrosOrdenadosAtt = members.sort(function (a, b) {
                 return b.missed_votes - a.missed_votes
             });
         } else {
-            var sortedArray = members.sort(function (a, b) {
+            var arrMiembrosOrdenadosAtt = members.sort(function (a, b) {
                 return a.missed_votes - b.missed_votes
             });
-        }
-        
-        // take only 10% from sortedArray
-        var checkedPrecent = sortedArray.length / 10;
-        checkedPrecent = checkedPrecent.toFixed(0);
-        // save in statistics this 10%
-        
-        var tenPrcArray = [];
-        for (var i = 0; i<checkedPrecent; i++){
-            tenPrcArray.push(members[i]) ;
-        }
-        
-        if(direction == "least"){
-            statistics.leastEngaged = tenPrcArray;
+        }        
+        // recogemos solamente los Top Ten ya sea Menos o Mas seguidos
+        var arrTopMiembros = [];
+        var arrDiezPorCientoMiembros = arrMiembrosOrdenadosAtt.length / 10;
+        arrDiezPorCientoMiembros = arrDiezPorCientoMiembros.toFixed(0);                
+        for (var puntero = 0; puntero<arrDiezPorCientoMiembros; puntero++){
+            arrTopMiembros.push(members[puntero]) ;
+        }        
+        if(LeastOrMost == "least"){
+            analisis.leastEngaged = arrTopMiembros;
         } else {
-            statistics.mostEngaged = tenPrcArray;
+            analisis.mostEngaged = arrTopMiembros;
         }
     }
 
-    function buildSmallTable(smallArray, whereToPut){
-        
-        if(whereToPut){
-            for(var fila=0; fila < smallArray.length -1; fila++){
-                var link = "<a href='" + smallArray[fila].url + "' target='_blank'>" + smallArray[fila].first_name + " " + smallArray[fila].last_name + "</a>";
-                var newRow = document.createElement("tr");
-                newRow.insertCell().innerHTML = link;
-                newRow.insertCell().innerHTML = smallArray[fila].missed_votes;
-                newRow.insertCell().innerHTML = smallArray[fila].missed_votes_pct;
-                whereToPut.append(newRow);
+    // 2 funciones para calculos especificos para sacar el 10% de los Miembros mas seguidos, o menos seguidos
+    function engagedParLessTen() {        
+        var arrMiembrosOrdenadosLoyalty = members.sort(function (a,b) {
+            return a.votes_with_party_pct - b.votes_with_party_pct;
+        });
+        var porcentaje = (arrMiembrosOrdenadosLoyalty.length * 0.10).toFixed(0);        
+        for (var puntero = 0; puntero < porcentaje ; puntero++) {
+            analisis.doNotVote.push(arrMiembrosOrdenadosLoyalty[puntero])
+        }
+        console.log(analisis.doNotVote);
+    }
 
+    function engagedParMostTen() {        
+        var arrMiembrosOrdenadosLoyalty = members.sort(function (a,b) {
+            return b.votes_with_party_pct - a.votes_with_party_pct;
+        });        
+        var porcentaje = (arrMiembrosOrdenadosLoyalty.length * 0.10).toFixed(0);        
+        for (var puntero = 0; puntero < porcentaje; puntero++){
+            analisis.doVote.push(members[puntero])
+        }
+    }
+
+    // funcion para cargar la tabla a partir de los calculos especificos de las 2 funciones de aqui arriba
+    function cargarTablaAnalisis(arrTemporal, sitio){             
+        if(sitio){
+            for(var fila=0; fila < arrTemporal.length -1; fila++){
+                var webMember = "<a href='" + arrTemporal[fila].url + "' target='_blank'>" + arrTemporal[fila].first_name + " " + arrTemporal[fila].last_name + "</a>";
+                var hilera = document.createElement("tr");
+                hilera.insertCell().innerHTML = webMember;
+                hilera.insertCell().innerHTML = arrTemporal[fila].missed_votes;
+                hilera.insertCell().innerHTML = arrTemporal[fila].missed_votes_pct;
+                sitio.append(hilera);
                 if (fila % 2==0)
                 {
-                    newRow.className="pares";
-                    if (fila == smallArray.length -2)
+                    hilera.className="pares";
+                    if (fila == arrTemporal.length -2)
                     {
-                        newRow.className="ultima_par";
+                        hilera.className="ultima_par";
                     }
                 }
                 else
                 {
-                    newRow.className="impares";
-                    if (fila == smallArray.length -2)
+                    hilera.className="impares";
+                    if (fila == arrTemporal.length -2)
                     {
-                        newRow.className="ultima_impar";
+                        hilera.className="ultima_impar";                        
                     }
                 }
             }
-        }
-    }
-
-
-    function engagedParLessTen() {
-        
-        var mySortedArray = members.sort(function (a,b) {
-            return a.votes_with_party_pct - b.votes_with_party_pct;
-        });
-        
-        var pctNumber = (mySortedArray.length * 0.10).toFixed(0);
-                    //(353*0.1).toFixed(0)
-        
-        for (var i = 0; i < pctNumber ; i++) {
-            statistics.doNotVote.push(mySortedArray[i])
-        }
-        
-        console.log(statistics.doNotVote);
-    }
-
-    function engagedParMostTen() {
-        
-        var myNewSortedArray = members.sort(function (a,b) {
-            return b.votes_with_party_pct - a.votes_with_party_pct;
-        });
-        
-        var pctNewNumber = (myNewSortedArray.length * 0.10).toFixed(0);
-        
-        for (var i = 0; i < pctNewNumber; i++){
-            statistics.doVote.push(members[i])
+            var pieTabla = document.createElement("tr");
+            pieTabla.insertCell().innerHTML = "TOTAL members listed: " + (arrTemporal.length -1);
+            sitio.append(pieTabla);
+            pieTabla.className="pieTabla";
         }
     }
  

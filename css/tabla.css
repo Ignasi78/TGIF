@@ -54,3 +54,9 @@
 	border-bottom: 0px dotted black;
 	padding: 5px 10px;
 }
+
+.pieTabla{
+	background-color: darkred;
+	color: wheat;
+	column-span: 2;
+}
