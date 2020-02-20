@@ -412,6 +412,9 @@ function generar_tabla(arrayTablaBD, sitio) {
                 barraProgreso.value=(arrayTablaBD[cuentaCampos][cuentaRegistros+1]);
                 barraProgreso.innerHTML = barraProgreso.value;
                 celda.appendChild(barraProgreso);
+                var spanTextoValor = document.createElement("span");
+                spanTextoValor.innerHTML = " " + barraProgreso.value;
+                celda.append(spanTextoValor);
                 //alert("ponemos una barra para " + cuentaRegistros + " a valor " + barraProgreso.value);
                 //     var celdaProgreso = document.createTextNode("<progress value=" + arrayTablaBD[cuentaCampos][cuentaRegistros+1] + " max='100' class='barraStyle'> </progress>");
 

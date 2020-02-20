@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     border: 0;
+    font-family: 'Fredericka the Great', cursive;
     /* font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; */
     font-size: 100%;
     font: inherit;
@@ -18,7 +19,9 @@
 body{
   background-color: #cd853f !important;
   color: white !important;
-  font: 300 16px/22px "Lato", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;  
+  /* font: 300 16px/22px "Lato", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;   */
+  /* overflow-y: hidden; Hide vertical scrollbar */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
 }
 
 .primary-header a:hover,
@@ -106,10 +109,19 @@ a{
 
 .row {
     background: #fff;
-    background: url("../img/fondo-hojas-plateadas.jpg");
+    background: url("../img/huellas.jpg");  
+    /* //, opacity: 70.5; */
+    /* filter:alpha(opacity=3); */
+    /* background: url("../img/fondo-hojas-plateadas.jpg"); */
+    background-repeat: 1;
+    /* background-repeat: no-repeat; */
+    /* background-size: 100%; */
+    /* background-size: cover; */
     color: darkred;
     padding: 50px 0 44px 125px;
-    font-family: 'Britannic Bold' !important;
+    /* font-family: 'Britannic Bold' !important; */
+    /* font-family: 'Special Elite', cursive;  */
+    font-family: 'Fredericka the Great', cursive;
 }
 
 .row p{
@@ -140,12 +152,13 @@ h3{
     color: darkred;
     margin: 0px 0px 10px 0px;
     font-size: 18px;
-    font-family: 'Arial Narrow';
-    font-style: italic;
+    font-family: 'Fredericka the Great', cursive;
+    /* font-family: 'Arial Narrow';
+    font-style: italic; */
     font-weight: bold;
 }
 
-h5{
+h4{
     color: darkred;
     font-weight: bold;
     font-size: 22px;
@@ -290,7 +303,7 @@ h5{
   color: darkred;
 }
 
-#scroll {
+.scroll {
     position:fixed;
     right:10px;
     bottom:10px;
@@ -301,9 +314,10 @@ h5{
     text-indent:-9999px;
     -webkit-border-radius:15px;
     -moz-border-radius:15px;
-    border-radius:15px
+    border-radius:15px;
+    display: none;
 }
-#scroll span {
+.scroll span {
     position:absolute;
     top:50%;
     left:50%;
@@ -314,11 +328,10 @@ h5{
     border:8px solid transparent;
     border-bottom-color:#ffffff;
 }
-#scroll:hover {
+.scroll:hover {
     background-color: wheat;
     opacity:1;filter:"alpha(opacity=100)";
     -ms-filter:"alpha(opacity=100)";
-
 }
 
 #cuadrante-11  {
@@ -344,6 +357,7 @@ h5{
 
 .more-info-box{
   font-weight: bolder;
+  text-align: justify;
 }
 
 #barra-filtros{

@@ -1,22 +1,51 @@
 'use strict'
 
 // declarar variables de respectivos botones
-var cuerpo = document.querySelector("body");
-var navLista1 = document.querySelector("#nav-lista1");
-var botonDesp1 = document.querySelector("#BotonDesplegable1");
+var btnScroll      = document.querySelector(".scroll");
+btnScroll.display  = "none";
+var cuerpo         = document.querySelector("body");
+var navLista1      = document.querySelector("#nav-lista1");
+var botonDesp1     = document.querySelector("#BotonDesplegable1");
     var subBoton11 = document.querySelector("#subBoton11");
     var subBoton12 = document.querySelector("#subBoton12");
 
-var navLista2 = document.querySelector("#nav-lista2");    
-var botonDesp2 = document.querySelector("#BotonDesplegable2");
+var navLista2      = document.querySelector("#nav-lista2");    
+var botonDesp2     = document.querySelector("#BotonDesplegable2");
     var subBoton21 = document.querySelector("#subBoton21");
     var subBoton22 = document.querySelector("#subBoton22");
 
-var navLista3 = document.querySelector("#nav-lista3");
-var botonDesp3 = document.querySelector("#BotonDesplegable3");
+var navLista3      = document.querySelector("#nav-lista3");
+var botonDesp3     = document.querySelector("#BotonDesplegable3");
     var subBoton31 = document.querySelector("#subBoton31");
     var subBoton32 = document.querySelector("#subBoton32");
 
+// When the user scrolls down 500px from the top of the document, show the button
+window.onscroll = function() {scrollFunction(500)};
+
+// boton de ir a Go to Top
+btnScroll.addEventListener('click',function(){
+    topFunction();
+});
+
+function scrollFunction(pixelsScrolled) {
+  if (document.body.scrollTop > pixelsScrolled || document.documentElement.scrollTop > pixelsScrolled) {
+    btnScroll.style.display = "block";
+  } else {
+    btnScroll.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scroll({
+  top: 0, 
+  behavior: 'smooth'
+});
+  document.documentElement.scroll({
+  top: 0, 
+  behavior: 'smooth'
+});
+}
 
 // funciones de cambiar y recuperar 
 function CambiarColor(elemento){

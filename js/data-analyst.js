@@ -1,5 +1,18 @@
+// ====================================================================================================================================
+// si ya existe en variable localName de nuestro LocalStorage, sino llamamos a FETCH
+// no hace falta llamar al Fetch, recogemos el valor y ejecutamos nuestra funcion init
+//     creamos un objeto tipo JSON (a medida, solo valores que queremos (evitamos Array-Matriz temporal))
+// calcula la Tabla Glance, la del cuadrante 1-2 (no escribe, solo calcula y almacena resultados en array analisis[] var global):
+//     interactua con HTML mediante DOM para escribir Tabla Glance (comun a varias HTML) y luego dependiendo de la pagina HTML 
+//     en que se encuentre, realizará llamada a funcion cargarTablaAnalisis pasando (arrTemporal y sitio donde escribirla)
+// calcula 2 Tablas Engaged de las 2 paginas Attendance (tanto Senate como House), de cuadrantes 2-1 y 2-2 del HTML, 
+//    segun pasemos "least" (orden menos a mas) o "most" 
+//    es decir en total 4 tablas (Att-Sen-Least, Att-Sen-Most, Att-Hou-Least, Att-Hou-Most) campos Name, Num.Missed Votes, %Missed votes
+// calcula 2 Tablas Loyal de las 2 paginas PartyLoyalty (tanto Senate como House), de cuadrantes 2-1 y 2-2 del HTML, 
+//    segun pasemos "least" o "most"
+//    es decir en total 4 tablas (Par-Sen-Least, Par-Sen-Most, Par-Hou-Least, Par-Hou-Most) campos Name, Num.Party Votes, %Party votes
+// ====================================================================================================================================
 'use strict'
-
 var data;
 
 onload = (function () {
@@ -10,64 +23,80 @@ onload = (function () {
 
     if (document.title.includes('Senate')) {
         myURL = "https://api.propublica.org/congress/v1/113/senate/members.json";     
+        var localName = "dataSenate";
     } else {
         myURL = "https://api.propublica.org/congress/v1/113/house/members.json"; 
+        var localName = "dataHouse";
     }
+    checkLocalStorage();  // vaciar si mas de 15 dias sin vaciarlo
+    if (!this.localStorage[localName]){
+        fetch(myURL, {method:"GET", headers: {'X-API-Key': 'LhqEr2wOQVg6gsLmo3WMIn7gY3MOlWSCiTUirP1t'}})
 
-    fetch(myURL, {method:"GET", headers: {'X-API-Key': 'LhqEr2wOQVg6gsLmo3WMIn7gY3MOlWSCiTUirP1t'}})
+            //  a continuación THEN (función PROMESA) hasta que no llegan datos del FETCH, no continua
+        .then(response => response.json())
+            //  que es lo mismo que poner la funcion entera asi: 
+                                                            //    .then(function (response) {
+                                                            //        if (response.ok) {
+                                                            //           return response.json();
+                                                            //        }
+                                                            //    }
+            //  si response = OK, es dedir NO ha fallado conexión, seguimos aqui; sino iriamos al CATCH.
+        .then((json) => { data = json;
+            //  que es lo mismo que poner la funcion entera asi: 
+                                                            //    .then(function (json) {
+                                                            //       var data = json;
+                                                            //    }
+                                        
+                //  y en este segundo THEN, ahora SI tenemos datos (variable data), pues cargamos la pagina
+                // ... en version con LocalStorage, lo almacenamos en memoria
+                this.localStorage.setItem(localName, JSON.stringify(data.results[0].members));
+                var FetchMembers = JSON.parse(localStorage.getItem(localName));
 
-        //  a continuación THEN (función PROMESA) hasta que no llegan datos del FETCH, no continua
-       .then(response => response.json())
-        //  que es lo mismo que poner la funcion entera asi: 
-                                                        //    .then(function (response) {
-                                                        //        if (response.ok) {
-                                                        //           return response.json();
-                                                        //        }
-                                                        //    }
-        //  si response = OK, es dedir NO ha fallado conexión, seguimos aqui; sino iriamos al CATCH.
-       .then((json) => { data = json;
-        //  que es lo mismo que poner la funcion entera asi: 
-                                                        //    .then(function (json) {
-                                                        //       var data = json;
-                                                        //    }
-            //  y en este segundo THEN, ahora SI tenemos datos (variable data), pues cargamos la pagina
-            rellenaPagina();
-            //  y ocultamos la animacion gif de 'cargando...'
-            ocultaCargando();             
-       })
-        //  en caso de fallar la conexion en el primer THEN, es decir response = NOK
-       .catch(function(error){
-            console.log("request failed");
-       });
+                initialize(FetchMembers);  // initialize(data);
+                //rellenaPagina();
+
+                //  y ocultamos la animacion gif de 'cargando...'
+                ocultaCargando();             
+
+        })
+            //  en caso de fallar la conexion en el primer THEN, es decir response = NOK
+        .catch(function(error){
+                console.log("request failed");
+        });
+    }else{
+        // si ya existe en variable localName de nuestro LocalStorage,
+        // no hace falta llamar al Fetch, recogemos el valor y ejecutamos nuestra funcion init
+        init(JSON.parse(localStorage.getItem(localName)));  
+        // ocultar todos los Gif de Loading
+        ocultaCargando();             
+        // loader.forEach(l => l.style.display = 'none');      
+    }
 })
+
+function checkLocalStorage() {
+    var lastClear = localStorage.getItem('lastclear'),
+      timeNow = (new Date()).getTime();
+    // .getTime() returns milliseconds so 1000 * 60 * 60 * 24 = 15 days
+    if ((timeNow - lastClear) > 1000 * 60 * 60 * 15) {
+      localStorage.clear();
+      localStorage.setItem('lastClear', timeNow);
+    }
+  }
 
 // oculta el GIF animado de espera mientras se cargan los datos de la API, una vez ya se hayan cargado.
 function ocultaCargando(){
     var pagina = document.title;
     switch (pagina){
-        case "TGIF Senate Attendance":
-            loadingSenateAtt.style.display = "none"; 
-            console.log('oculto gif de loadingSenateAtt');
-            break;
-        case "TGIF Senate Party Loyalty":
-            loadingSenatePar.hidden = "true";
-            // loadingSenatePar.style.display = "none"; 
-            console.log('oculto gif de loadingSenatePar');
-            break;
-        case "TGIF House Attendance":
-            loadingHouseAtt.style.display = "none"; 
-            console.log('oculto gif de loadingHouseAtt');
-            break;
-        case "TGIF House Party Loyalty":
-            loadingHousePar.style.display = "none"; 
-            console.log('oculto gif de loadingHousePar');
-            break;
-        default :
-            console.log('no puedo ocultar el gif de loading');
+        case "TGIF Senate Attendance": loadingSenateAtt.style.display = "none"; break;
+        case "TGIF Senate Party Loyalty": loadingSenatePar.hidden = "true"; break;
+        case "TGIF House Attendance": loadingHouseAtt.style.display = "none"; break;
+        case "TGIF House Party Loyalty": loadingHousePar.style.display = "none"; break;
+        default : console.log('no puedo ocultar el gif de loading');
     }
 }
 
-function rellenaPagina (){
+// initialize es la que realiza la preparacion-filtro de datos, rellena pagina y oculta gif de Loading
+function initialize(members){
     // var data = data_senate;   ... ahora ya no, ahora var 'data' contiene resultado del FETCH
     // creamos un objeto tipo JSON (a medida, solo valores que queremos (evitamos Array-Matriz temporal))
     // usamos LET en vez de VAR para reutilizar mismas variables para 4 paginas
@@ -85,110 +114,116 @@ function rellenaPagina (){
         "missedLeastVote": [],
         "leastEngaged": [],
         "mostEngaged": [],
-    }
-    
-    let members = data.results[0].members;
-
-    // === LLAMADAS A FUNCIONES (aunque seguimos dentro la funcion rellenaPagina) ===========================
-
-    // calcula la Tabla Glance, la del cuadrante 1-2:
-    acumuladorSegunPartido();  // suma X candidatos Democratas, Y Republicanos, Z indepes
+    }    
+    // calcula la Tabla Glance, la del cuadrante 1-2 (no escribe, solo calcula y almacena resultados en array analisis[] var global):
+    acumuladorSegunPartido(members);  // suma X candidatos Democratas, Y Republicanos, Z indepes
     mediaVotosPorPartido();  // calcula la media AVG del campo "% votos" de cada partido
-    // calcula 2 Tablas Engaged, de cuadrantes 2-1 y 2-2 del HTML, segun le pasemos "least" (orden menos a mas) o "most" (inverso)
-    engagedAtt("least");
-    engagedAtt("most");
-    // calcula 2 Tablas lessTen
-    engagedParLessTen();  
-    engagedParMostTen();  
-    escribeHtml();
 
-    if (document.title.includes('Senate')) {
-        if (document.title.includes('Party')) {
+    // interactua con HTML mediante DOM para escribir Tabla Glance (comun a varias HTML) y luego dependiendo de la pagina HTML 
+    //     en que se encuentre, realizará llamada a funcion cargarTablaAnalisis pasando (arrTemporal y sitio donde escribirla)
+    escribeHtml("glance");
+    // calcula las Tablas inferiores segun pagina html
+    if (document.title.includes('Senate')) {   // 2 paginas Senate
+        if (document.title.includes('Party')) {    // PartyLoyalty
+            analisis.leastEngaged = preparando(members,"least","votes_with_party_pct");
             var tablaLeast = document.getElementById('leastTablePartySen');
-            var tablaMost  = document.getElementById('mostTablePartySen');
-        }else{
+            cargarTablaAnalisis(analisis.leastEngaged,tablaLeast);
+            analisis.mostEngaged = preparando(members,"most","votes_with_party_pct");            
+            var tablaMost = document.getElementById('mostTablePartySen');
+            cargarTablaAnalisis(analisis.mostEngaged,tablaMost);
+        }else{                                     // Attendance
+            analisis.missedLeastVote = preparando(members,"least","missed_votes_pct");
             var tablaLeast = document.getElementById('leastTableAttSen');
-            var tablaMost  = document.getElementById('mostTableAttSen');
+            cargarTablaAnalisis(analisis.missedLeastVote,tablaLeast);
+            analisis.missedMostVote  = preparando(members,"most","missed_votes_pct");     
+            var tablaMost = document.getElementById('mostTableAttSen');
+            cargarTablaAnalisis(analisis.missedMostVote,tablaMost);       
         }
-    }else{
-        if (document.title.includes('Party')) {
-            var tablaLeast = document.getElementById('leastTablePartyHou');
-            var tablaMost  = document.getElementById('mostTablePartyHou');
-        }else{
+    }else{                     // 2 paginas House
+        if (document.title.includes('Party')) {    // PartyLoyalty
+            analisis.leastEngaged = preparando(members,"least","votes_with_party_pct");
+            var tablaLeast = document.getElementById('leastTablePartyHou');            
+            cargarTablaAnalisis(analisis.leastEngaged,tablaLeast);       
+            analisis.mostEngaged = preparando(members,"most","votes_with_party_pct");
+            var tablaMost = document.getElementById('mostTablePartyHou');            
+            cargarTablaAnalisis(analisis.mostEngaged,tablaMost);       
+        }else{                                     // Attendance
+            analisis.missedLeastVote = preparando(members,"least","missed_votes_pct");
             var tablaLeast = document.getElementById('leastTableAttHou');
-            var tablaMost  = document.getElementById('mostTableAttHou');
+            cargarTablaAnalisis(analisis.missedLeastVote,tablaLeast);       
+            analisis.missedMostVote = preparando(members,"most","missed_votes_pct");
+            var tablaMost = document.getElementById('mostTableAttHou');
+            cargarTablaAnalisis(analisis.missedMostVote,tablaMost);       
         }
     }
 
-    cargarTablaAnalisis(analisis.doVote, document.getElementById(tablaMost));
-    cargarTablaAnalisis(analisis.doNotVote, document.getElementById(tablaLeast));
-
-    //cargarTablaAnalisis(analisis.doVote, document.getElementById("mostLoyTable"));
-    //cargarTablaAnalisis(analisis.doNotVote, document.getElementById("leastLoyTable"));
-
+//  loyalParty("least");
+//  loyalParty("most");
+    
     // === DECLARACION DE FUNCIONES (aunque seguimos dentro la funcion rellenaPagina) =======================
 
-    function acumuladorSegunPartido() {
-        for (var puntero = 0; puntero < members.length; puntero++) {
-
+    function acumuladorSegunPartido(arrMiembros) {
+        for (var puntero = 0; puntero < arrMiembros.length; puntero++) {
             let everyMember = data.results[0].members[puntero];
-
             switch (everyMember.party) {
-                case "R":
-                    analisis.numberR++;
-                    break;
-                case "D":
-                    analisis.numberD++;
-                    break;
-                case "I":
-                    analisis.numberI++;
-                    break;
+                case "R": analisis.numberR++; break;
+                case "D": analisis.numberD++; break;
+                case "I": analisis.numberI++; break; 
             }
         }
     }
 
-    function escribeHtml() {
-        var titles = document.getElementsByClassName('cabeceras');
-        var repRow = document.getElementById('id-Repub');
-        var demRow = document.getElementById('id-Democ');
-        var indRow = document.getElementById('id-Indep');
-        var total = document.getElementById('id-total');
+    function escribeHtml(tipoTabla) {
 
-        if (document.title.includes('Senate')) {
-            if (document.title.includes('Party')) {
-                var tablaLeast = document.getElementById('leastTablePartySen');
-                var tablaMost  = document.getElementById('mostTablePartySen');
+        if (tipoTabla == "glance"){
+            // tabla de At a Glance
+            var titles = document.getElementsByClassName('cabeceras');
+            var repRow = document.getElementById('id-Repub');
+            var demRow = document.getElementById('id-Democ');
+            var indRow = document.getElementById('id-Indep');
+            var total  = document.getElementById('id-total');
+            titles.className="capa_tabla cabecera";
+            repRow.insertCell().innerHTML = analisis.numberR;
+            repRow.insertCell().innerHTML = analisis.republicanPartyPercentage+"%";
+            repRow.className="pares";        
+            demRow.insertCell().innerHTML = analisis.numberD;
+            demRow.insertCell().innerHTML = analisis.democratsPartyPercentage+"%";
+            demRow.className="impares";
+            indRow.insertCell().innerHTML = (analisis.numberI==0)?"n.a.":analisis.numberI+"%";
+            indRow.insertCell().innerHTML = (isNaN(analisis.independentPartyPercentage))? "n.a.":analisis.independentPartyPercentage+"%";
+            indRow.className="pares";
+            total.insertCell().innerHTML = analisis.numberD + analisis.numberR + analisis.numberI;
+            total.insertCell().innerHTML = analisis.totalPartyPercentage+"%";
+            total.className="impares";
+            total.className="ultima_impar";
+        }else{   // if (tipoTabla == "analyst"){
+            if (document.title.includes('Senate')) {              // tablas estadisticas Data Analyst (cuadrantes inferiores)
+                if (document.title.includes('Party')) {
+                    var tablaLeast = document.getElementById('leastTablePartySen');
+                    cargarTablaAnalisis(analisis.doVote, tablaLeast);   // Loyalty - Senate or House - Least Loyal - list of the bottom 10% members of total members (order by % party votes)  ....
+                    var tablaMost  = document.getElementById('mostTablePartySen');
+                    cargarTablaAnalisis(analisis.doNotVote, tablaMost);	  // Loyalty - Senate or House - Most Loyal - list of the top 10% members of total members (order by % party votes)
+                }else{
+                    var tablaLeast = document.getElementById('leastTableAttSen');
+                    cargarTablaAnalisis(analisis.leastEngaged, tablaLeast);   // Attendance - Senate or House - Least Engaged - list the bottom 10% members of total members (order by % missed votes)  ... menos seguidos
+                    var tablaMost  = document.getElementById('mostTableAttSen');
+                    cargarTablaAnalisis(analisis.mostEngaged, tablaMost);     // Attendance - Senate or House - Most Engaged - list the top 10% members of total members (order by % missed votes)  ... mas seguidos            
+                }
             }else{
-                var tablaLeast = document.getElementById('leastTableAttSen');
-                var tablaMost  = document.getElementById('mostTableAttSen');
-            }
-        }else{
-            if (document.title.includes('Party')) {
-                var tablaLeast = document.getElementById('leastTablePartyHou');
-                var tablaMost  = document.getElementById('mostTablePartyHou');
-            }else{
-                var tablaLeast = document.getElementById('leastTableAttHou');
-                var tablaMost  = document.getElementById('mostTableAttHou');
-            }
-        }
-        titles.className="capa_tabla cabecera";
-        repRow.insertCell().innerHTML = analisis.numberR;
-        repRow.insertCell().innerHTML = analisis.republicanPartyPercentage;
-        repRow.className="pares";        
-        demRow.insertCell().innerHTML = analisis.numberD;
-        demRow.insertCell().innerHTML = analisis.democratsPartyPercentage;
-        demRow.className="impares";
-        indRow.insertCell().innerHTML = analisis.numberI;
-        indRow.insertCell().innerHTML = analisis.independentPartyPercentage;
-        indRow.className="pares";
-        total.insertCell().innerHTML = analisis.numberD + analisis.numberR + analisis.numberI;
-        total.insertCell().innerHTML = analisis.totalPartyPercentage;
-        total.className="impares";
-        total.className="ultima_impar";
-        
-        cargarTablaAnalisis(analisis.leastEngaged, tablaLeast);        
-        cargarTablaAnalisis(analisis.mostEngaged, tablaMost);
-    }
+                if (document.title.includes('Party')) {
+                    var tablaLeast = document.getElementById('leastTablePartyHou');
+                    cargarTablaAnalisis(analisis.doNotVote, tablaLeast);   // Loyalty - Senate or House - Least Loyal - list of the bottom 10% members of total members (order by % party votes)  ....
+                    var tablaMost  = document.getElementById('mostTablePartyHou');
+                    cargarTablaAnalisis(analisis.doVote, tablaMost);	  // Loyalty - Senate or House - Most Loyal - list of the top 10% members of total members (order by % party votes)
+                }else{
+                    var tablaLeast = document.getElementById('leastTableAttHou');
+                    cargarTablaAnalisis(analisis.leastEngaged, tablaLeast);   // Attendance - Senate or House - Least Engaged - list the bottom 10% members of total members (order by % missed votes)  ... menos seguidos
+                    var tablaMost  = document.getElementById('mostTableAttHou');
+                    cargarTablaAnalisis(analisis.mostEngaged, tablaMost);     // Attendance - Senate or House - Most Engaged - list the top 10% members of total members (order by % missed votes)  ... mas seguidos            
+                }
+            }           
+        }  // end If tipoTabla
+    }   // end function escribeHtml()
 
     function mediaVotosPorPartido() {
         var arrayWithDem = [];
@@ -217,60 +252,42 @@ function rellenaPagina (){
         for (var puntero = 0; puntero < arrTemporal.length; puntero++) {
             acumula = acumula + arrTemporal[puntero].votes_with_party_pct;
         }
-        var media = acumula;
-        acumula = acumula / arrTemporal.length;
+        var media = acumula / arrTemporal.length;
         return media;
     }
 
-    // funcion para sacar los Menos Seguidos (tabla Less) o Mas Seguidos (tabla Most) segun sea Ascendente o Descendente
-    function engagedAtt(LeastOrMost) {        
-        if(LeastOrMost == "least"){ 
-            var arrMiembrosOrdenadosAtt = members.sort(function (a, b) {
-                return b.missed_votes - a.missed_votes
-            });
-        } else {
-            var arrMiembrosOrdenadosAtt = members.sort(function (a, b) {
-                return a.missed_votes - b.missed_votes
-            });
-        }        
-        // recogemos solamente los Top Ten ya sea Menos o Mas seguidos
-        var arrTopMiembros = [];
-        var arrDiezPorCientoMiembros = arrMiembrosOrdenadosAtt.length / 10;
-        arrDiezPorCientoMiembros = arrDiezPorCientoMiembros.toFixed(0);                
-        for (var puntero = 0; puntero<arrDiezPorCientoMiembros; puntero++){
-            arrTopMiembros.push(members[puntero]) ;
-        }        
-        if(LeastOrMost == "least"){
-            analisis.leastEngaged = arrTopMiembros;
-        } else {
-            analisis.mostEngaged = arrTopMiembros;
+    function preparando(people,LeastOrMost,OrderField){
+        var arrOrdered = [];
+        var arrTenPerc = [];
+        (LeastOrMost == "most")? (arrOrdered=sortPeople(people,"asc",OrderField)):(arrOrdered=sortPeople(people,"desc",OrderField));
+        for (var i=0; i < people.length; i++){
+            if (arrTenPerc.length < Math.round(people.length * 0.1)){
+                arrTenPerc.push(arrOrdered[i]);
+            }
         }
-    }
-
-    // 2 funciones para calculos especificos para sacar el 10% de los Miembros mas seguidos, o menos seguidos
-    function engagedParLessTen() {        
-        var arrMiembrosOrdenadosLoyalty = members.sort(function (a,b) {
-            return a.votes_with_party_pct - b.votes_with_party_pct;
+        arrTenPerc.forEach(person => {
+            person.votes_with_party_abs = Math.round((person.total_votes - person.missed_votes * person.votes_with_party_pct / 100))
         });
-        var porcentaje = (arrMiembrosOrdenadosLoyalty.length * 0.10).toFixed(0);        
-        for (var puntero = 0; puntero < porcentaje ; puntero++) {
-            analisis.doNotVote.push(arrMiembrosOrdenadosLoyalty[puntero])
-        }
-        console.log(analisis.doNotVote);
+        return arrTenPerc;
     }
 
-    function engagedParMostTen() {        
-        var arrMiembrosOrdenadosLoyalty = members.sort(function (a,b) {
-            return b.votes_with_party_pct - a.votes_with_party_pct;
-        });        
-        var porcentaje = (arrMiembrosOrdenadosLoyalty.length * 0.10).toFixed(0);        
-        for (var puntero = 0; puntero < porcentaje; puntero++){
-            analisis.doVote.push(members[puntero])
+    function sortPeople(lista, orden, campo){
+        var listaOrdenada = new Array;
+        if (orden == "asc") {
+            listaOrdenada = lista.sort((a,b) => {
+                return a[campo] - b[campo];
+            })
         }
+        else if (orden == "desc") {
+            listaOrdenada = lista.sort((a,b) => {
+                return b[campo] - a[campo];
+            })
+        }
+        return listaOrdenada;
     }
 
     // funcion para cargar la tabla a partir de los calculos especificos de las 2 funciones de aqui arriba
-    function cargarTablaAnalisis(arrTemporal, sitio){             
+    function cargarTablaAnalisis(arrTemporal, sitio){        
         if(sitio){
             for(var fila=0; fila < arrTemporal.length -1; fila++){
                 var webMember = "<a href='" + arrTemporal[fila].url + "' target='_blank'>" + arrTemporal[fila].first_name + " " + arrTemporal[fila].last_name + "</a>";
@@ -302,5 +319,4 @@ function rellenaPagina (){
             pieTabla.className="pieTabla";
         }
     }
- 
-}   // aqui cerramos la funcion 'rellenaPagina' invocada en el segundo THEN del FETCH
+}   // aqui cerramos la funcion 'initialize(members)' invocada en el segundo THEN del FETCH
